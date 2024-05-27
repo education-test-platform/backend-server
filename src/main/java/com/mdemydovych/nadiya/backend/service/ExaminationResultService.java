@@ -1,10 +1,10 @@
 package com.mdemydovych.nadiya.backend.service;
 
 import com.mdemydovych.nadiya.backend.config.properties.DatabaseProperties;
-import com.mdemydovych.nadiya.model.examination.core.ExaminationDto;
 import com.mdemydovych.nadiya.model.examination.core.QuestionDto;
 import com.mdemydovych.nadiya.model.examination.result.AnswerDto;
 import com.mdemydovych.nadiya.model.examination.result.ExaminationResultDto;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,17 +32,27 @@ public class ExaminationResultService {
         ExaminationResultDto.class, examId, studentId);
   }
 
+  public List<ExaminationResultDto> findStudentExamResults(String studentId) {
+    return List.of(template.request(properties.getFindStudentExamResults(), HttpMethod.GET,
+        null, ExaminationResultDto[].class, studentId));
+  }
+
+  public List<ExaminationResultDto> findAllExamResults(String examId) {
+    return List.of(template.request(properties.getFindAllExamResultsPath(), HttpMethod.GET,
+        null, ExaminationResultDto[].class, examId));
+  }
+
   private ExaminationResultDto calculateAndSetScore(ExaminationResultDto resultDto) {
-    ExaminationDto examinationDto = examinationService
-        .findExamination(resultDto.getExaminationId());
-    int score = (int) calculateCorrectAnswers(examinationDto, resultDto);
-    resultDto.setScore(String.valueOf((double) score / examinationDto.getQuestions().size() * 100));
+    Set<QuestionDto> questions = examinationService
+        .findExaminationQuestions(resultDto.getExamination().getId());
+    int score = (int) calculateCorrectAnswers(questions, resultDto);
+    resultDto.setScore(String.valueOf((double) score / questions.size() * 100));
     return resultDto;
   }
 
   private long calculateCorrectAnswers(
-      ExaminationDto examinationDto, ExaminationResultDto resultDto) {
-    Map<String, QuestionDto> questions = collectQuestionsById(examinationDto.getQuestions());
+      Set<QuestionDto> examQuestions, ExaminationResultDto resultDto) {
+    Map<String, QuestionDto> questions = collectQuestionsById(examQuestions);
     return resultDto.getAnswers().stream()
         .filter(answerDto -> isCorrectAnswer(questions, answerDto))
         .count();

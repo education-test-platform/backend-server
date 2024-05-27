@@ -3,6 +3,7 @@ package com.mdemydovych.nadiya.backend.listener;
 import io.github.centrifugal.centrifuge.Client;
 import io.github.centrifugal.centrifuge.ErrorEvent;
 import io.github.centrifugal.centrifuge.EventListener;
+import io.github.centrifugal.centrifuge.ServerPublicationEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,5 +16,8 @@ public class ServerBrokerListener extends EventListener {
     logger.error("Server broker error {}", event.getError().getMessage());
   }
 
-
+  @Override
+  public void onPublication(Client client, ServerPublicationEvent event) {
+    logger.info("Success pub");
+  }
 }

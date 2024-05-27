@@ -108,44 +108,51 @@ public class TestClass {
         opts,
         listener
     );
-    Subscription subscription = client.newSubscription("hehehoho", new SubscriptionEventListener() {
-      @Override
-      public void onPublication(Subscription sub, PublicationEvent event) {
-        System.out.println("on pub " + new String(event.getData(), UTF_8));
-      }
+    Subscription subscription = client.newSubscription("396d5ccc-a331-4ada-b04b-076ef17297c5",
+        new SubscriptionEventListener() {
+          @Override
+          public void onPublication(Subscription sub, PublicationEvent event) {
+            System.out.println("on pub " + new String(event.getData(), UTF_8));
+          }
 
-      @Override
-      public void onJoin(Subscription sub, JoinEvent event) {
-        System.out.println("on join");
-      }
+          @Override
+          public void onJoin(Subscription sub, JoinEvent event) {
+            System.out.println("on join");
+          }
 
-      @Override
-      public void onLeave(Subscription sub, LeaveEvent event) {
-        System.out.println("on leave");
-      }
+          @Override
+          public void onLeave(Subscription sub, LeaveEvent event) {
+            System.out.println("on leave");
+          }
 
-      @Override
-      public void onSubscribed(Subscription sub, SubscribedEvent event) {
-        System.out.println("on subs");
-      }
+          @Override
+          public void onSubscribed(Subscription sub, SubscribedEvent event) {
+            System.out.println("on subs");
+          }
 
-      @Override
-      public void onUnsubscribed(Subscription sub, UnsubscribedEvent event) {
-        System.out.println("on unsubs");
-      }
+          @Override
+          public void onUnsubscribed(Subscription sub, UnsubscribedEvent event) {
+            System.out.println("on unsubs");
+          }
 
-      @Override
-      public void onSubscribing(Subscription sub, SubscribingEvent event) {
-        System.out.println("on onSubscribing");
-      }
+          @Override
+          public void onSubscribing(Subscription sub, SubscribingEvent event) {
+            System.out.println("on onSubscribing");
+          }
 
-      @Override
-      public void onError(Subscription sub, SubscriptionErrorEvent event) {
-        System.out.println("on error");
-      }
-    });
+          @Override
+          public void onError(Subscription sub, SubscriptionErrorEvent event) {
+            System.out.println("on error");
+          }
+        });
     client.connect();
     subscription.subscribe();
     Thread.sleep(10000000);
+  }
+
+  @Test
+  void testtest() {
+    String message = "message";
+    System.out.println();
   }
 }

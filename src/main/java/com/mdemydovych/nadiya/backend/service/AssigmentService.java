@@ -1,6 +1,9 @@
 package com.mdemydovych.nadiya.backend.service;
 
+import com.mdemydovych.nadiya.backend.annotation.Notify;
 import com.mdemydovych.nadiya.backend.config.properties.DatabaseProperties;
+import com.mdemydovych.nadiya.backend.model.Event;
+import com.mdemydovych.nadiya.model.request.AssignStudentRequest;
 import com.mdemydovych.nadiya.model.user.UserDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -15,18 +18,19 @@ public class AssigmentService {
 
   public final DatabaseProperties properties;
 
-  public void assignStudentToTeacher(String studentId, String teacherId) {
+  @Notify(Event.ASSIGN_STUDENT)
+  public void assignStudentToTeacher(AssignStudentRequest request) {
     template.request(properties.getAssignStudentToTeacherPath(),
-        HttpMethod.POST, null, Void.class, teacherId, studentId);
+        HttpMethod.POST, request, Void.class);
   }
 
   public List<UserDto> findStudentTeachers(String studentId) {
     return List.of(template.request(properties.getFindStudentTeachersPath(),
-        HttpMethod.POST, null, UserDto[].class, studentId));
+        HttpMethod.GET, null, UserDto[].class, studentId));
   }
 
   public List<UserDto> findTeacherStudents(String teacherId) {
     return List.of(template.request(properties.getFindTeacherStudentsPath(),
-        HttpMethod.POST, null, UserDto[].class, teacherId));
+        HttpMethod.GET, null, UserDto[].class, teacherId));
   }
 }
