@@ -34,11 +34,4 @@ public class BrokerPublisherService {
     }
   }
 
-  private Map<String, Object> buildMessage(String message, List<String> topics) {
-    Map<String, Object> body = new HashMap<>();
-    body.put("method", "broadcast");
-    body.put("params", Map.of("channels", topics, "data", new BrokerMessage(message)));
-    return body;
-  }
-
 }
