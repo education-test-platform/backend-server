@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -26,12 +27,14 @@ public class ExaminationService {
   private final ExaminationMapper mapper;
 
   @Notify(Event.PUBLISH_EXAM)
-  @PreAuthorize("hasAuthority('TEACHER')")
+  @PreAuthorize("hasAuthority('TEACHER') "
+      + "and T(com.mdemydovych.nadiya.backend.utils.UserUtils).getCurrentUserId() == #dto.teacher.id")
   public void save(ExaminationDto dto) {
     template.request(properties.getSaveExaminationPath(),
         HttpMethod.POST, dto, String.class);
   }
 
+  @PostAuthorize("returnObject.enabled")
   public ExaminationAo findExaminationAo(String id) {
     return template.request(properties.getFindExaminationPath(),
         HttpMethod.GET, null, ExaminationAo.class, id);
@@ -43,8 +46,7 @@ public class ExaminationService {
   }
 
   public ExaminationPreview findExaminationPreview(String id) {
-    ExaminationDto examination = template.request(properties.getFindExaminationPath(),
-        HttpMethod.GET, null, ExaminationDto.class, id);
+    ExaminationDto examination = findExaminationById(id);
     return mapper.toPreview(examination);
   }
 
@@ -60,5 +62,10 @@ public class ExaminationService {
         template.request(properties.getFindActiveStudentExams(),
             HttpMethod.GET, null, ExaminationDto[].class, studentId));
     return mapper.toPreview(result);
+  }
+
+  public ExaminationDto findExaminationById(String id) {
+    return template.request(properties.getFindExaminationPath(),
+        HttpMethod.GET, null, ExaminationDto.class, id);
   }
 }

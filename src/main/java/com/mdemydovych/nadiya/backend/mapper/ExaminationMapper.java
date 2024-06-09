@@ -21,6 +21,7 @@ public class ExaminationMapper {
     ExaminationPreview examinationPreview = new ExaminationPreview();
     examinationPreview.setId(examination.getId());
     examinationPreview.setTitle(examination.getTitle());
+    examinationPreview.setEnabled(examination.isEnabled());
     examinationPreview.setTeacher(examination.getTeacher());
     return examinationPreview;
   }

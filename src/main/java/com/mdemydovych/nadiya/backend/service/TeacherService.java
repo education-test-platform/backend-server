@@ -29,6 +29,12 @@ public class TeacherService {
     return examinationService.findTeacherExams(UserUtils.getCurrentUserId());
   }
 
+  public void changeExamStatus(String examId) {
+    ExaminationDto examination = examinationService.findExaminationById(examId);
+    examination.setEnabled(!examination.isEnabled());
+    examinationService.save(examination);
+  }
+
   private UserDto prepareCurrentUser() {
     UserDto user = new UserDto();
     user.setId(UserUtils.getCurrentUserId());
