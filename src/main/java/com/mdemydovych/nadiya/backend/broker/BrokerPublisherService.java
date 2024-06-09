@@ -32,23 +32,6 @@ public class BrokerPublisherService {
         logger.info(publishResult.toString());
       });
     }
-//    Map<String, Object> bodyMessage = buildMessage(message, topics);
-//    sendMessage(bodyMessage);
-  }
-
-  @SneakyThrows
-  private void sendMessage(Map<String, Object> message) {
-    String requestBodyString = objectMapper.writeValueAsString(message);
-    client.send(requestBodyString.getBytes(StandardCharsets.UTF_8), throwable -> {
-
-    });
-  }
-
-  private Map<String, Object> buildMessage(String message, List<String> topics) {
-    Map<String, Object> body = new HashMap<>();
-    body.put("method", "broadcast");
-    body.put("params", Map.of("channels", topics, "data", new BrokerMessage(message)));
-    return body;
   }
 
 }
